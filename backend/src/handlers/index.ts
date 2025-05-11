@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 import slug from "slug";
 import User from "../models/User";
 import { checkPassword, hashPassword } from "../utils/auth";
-import { hash } from "bcrypt";
+import { generateJWT } from "../utils/jwt";
 
 export const createAccount = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -51,5 +51,8 @@ export const login = async (req: Request, res: Response) => {
     res.status(404).json({ error: error.message });
     return;
   }
-  res.send("Autenticado");
+
+  const token = generateJWT({ user });
+
+  res.send(token);
 };
